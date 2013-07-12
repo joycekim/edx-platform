@@ -1,9 +1,14 @@
+#used for making http reqs
+import requests
+
+from django.shortcuts import redirect
+
 import logging
 log = logging.getLogger("tracking")
 """ all knewton stuff here """
 
 SessionData = {
-    'auth_header': 'Bearer 0ab79d39820c4e2aa21336b7e3186b5d',
+    'auth_header': None,
     'learning_instance_id': 'fe4e4984-e327-11e2-be28-23000a977c8e',
     'username': 'test_sandcastle_student_07022013105931',
     'password': '9m0o8v475lja04jz05mmtb1z2z2ry3ri',
@@ -32,3 +37,7 @@ def send_ungraded_event(event):
 def send_event(event):
   """ This figures out the event type, and chooses send_graded_event or send_ungraded_event"""
   return send_graded_event(event)
+
+def oauth_flow(request):
+  return redirect('https://bivins-apiuat.r.staging.knewton.com/v0/oauth/authorize?client_id=knewton&response_type=code&redirect_uri=https://192.168.20.40:8000%2Fknewton-recieve-auth-grant')
+
