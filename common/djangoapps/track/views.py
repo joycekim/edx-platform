@@ -14,6 +14,8 @@ from django_future.csrf import ensure_csrf_cookie
 from track.models import TrackingLog
 from pytz import UTC
 
+import knewton.api as knewton
+
 log = logging.getLogger("tracking")
 
 LOGFIELDS = ['username', 'ip', 'event_source', 'event_type', 'event', 'agent', 'page', 'time', 'host']
@@ -22,6 +24,9 @@ LOGFIELDS = ['username', 'ip', 'event_source', 'event_type', 'event', 'agent', '
 def log_event(event):
     """Write tracking event to log file, and optionally to TrackingLog model."""
     event_str = json.dumps(event)
+
+    knewton.send_event(event)  #send the knewton
+
     log.info(event_str[:settings.TRACK_MAX_EVENT])
     if settings.MITX_FEATURES.get('ENABLE_SQL_TRACKING_LOGS'):
         event['time'] = dateutil.parser.parse(event['time'])
