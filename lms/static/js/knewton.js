@@ -1,11 +1,12 @@
 ;(function($) {
 	var Knewton = {
 
-		urls: [],
+		urls: {},
 		_study_plan_visible: false,
 		_previous_active_tab: false,
 
 		init: function() {
+			return;
 			this._setup_interface();
 		},
 
@@ -14,12 +15,16 @@
 			$('.sequence-nav').hide();
 			$('.sequence-bottom').hide();
 
+			//insert the knewton floating next button
+			$('.course-wrapper').css('position', 'relative').append('<a style="padding:10px;position:absolute;top:30px;right:50px;display: inline-block;border-radius:15px;background-color:#EAEAEA" href="javascript:void(0);">Next ></a>');
+
 			//mutate the left nav to remove the links but keep the text
 			//also preserve all the url links in the url_map var
 			$('#accordion .chapter ul a').each((function(i, el) {
 				el = $(el);
-				this.urls.push(el.attr('href'));
+				// this.urls.push(el.attr('href'));
 				var p = $('p', el);
+				this.urls[el.attr('href')] = p.eq(0).text();
 				el.after(p);
 				el.remove();
 			}).bind(this));
@@ -45,7 +50,15 @@
 				this._previous_active_tab.removeClass('active');
 				$('#knewton-study-plan-toggle').addClass('active');
 				$('section.container div:first-child').hide();
-				$('section.container').append('<div style="padding:40px;" id="knewton-study-plan"><h2>Study Plan</h2><p>Study plan content goes here</p></div>');
+
+				var study_plan = '<ul>';
+				for (var href in this.urls) {
+					study_plan += '<li><a href="' + href + '">' + this.urls[href] + '</a></li>';
+				}
+				study_plan += '</ul>';
+
+
+				$('section.container').append('<div style="padding:40px;" id="knewton-study-plan"><h2>Study Plan</h2>' + study_plan + '</div>');
 			} else {
 				this._hide_study_plan();
 			}
