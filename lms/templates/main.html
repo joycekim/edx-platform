@@ -76,6 +76,9 @@
   <section class="content-wrapper">
     ${self.body()}
     <%block name="bodyextra"/>
+    % if course:
+      <script type="text/javascript" src="${static.url('js/knewton.js')}"></script>
+    % endif 
   </section>
 
 % if theme_enabled():
